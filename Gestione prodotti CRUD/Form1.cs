@@ -29,7 +29,7 @@ namespace Gestione_prodotti_CRUD
         }
         public void C() //Funzione "Crea"
         {
-            //Assegna alle variabili i valori scritti dall'utente
+            //Assegna alle variabili i valori scritti dall'utente 
             p[dim].Nome = txtb_ProductName.Text;
             p[dim].Prezzo = float.Parse(txtb_ProductPrice.Text);
             dim++;
