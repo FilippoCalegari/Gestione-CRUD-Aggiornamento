@@ -30,9 +30,27 @@ namespace Gestione_prodotti_CRUD
         public void C() //Funzione "Crea"
         {
             //Assegna alle variabili i valori scritti dall'utente 
-            p[dim].Nome = txtb_ProductName.Text;
-            p[dim].Prezzo = float.Parse(txtb_ProductPrice.Text);
-            dim++;
+            bool insert = true;
+
+            if (txtb_ProductName.Text == "" || txtb_ProductPrice.Text == "")
+            {
+                MessageBox.Show("Inserire qualcosa.");
+                insert = false;
+            }
+
+            if (insert == true)
+            {
+                if (System.Text.RegularExpressions.Regex.IsMatch(txtb_ProductPrice.Text, "[^0-9]"))
+                {
+                    MessageBox.Show("Inserisci un numero nella casella del prezzo.");
+                }
+                else
+                {
+                    p[dim].Nome = txtb_ProductName.Text;
+                    p[dim].Prezzo = float.Parse(txtb_ProductPrice.Text);
+                    dim++;
+                }
+            }
         }
         public void R() //Funzione "Leggi"
         {
@@ -53,7 +71,14 @@ namespace Gestione_prodotti_CRUD
             {
                 if (p[i].Nome == researchName)
                 {
-                    p[i].Nome = newName;
+                    if (newName == "")
+                    {
+                        MessageBox.Show("Inserisci il nuovo nome da inserire.");
+                    }
+                    else
+                    {
+                        p[i].Nome = newName;
+                    }
                 }
             }
         }
@@ -83,46 +108,49 @@ namespace Gestione_prodotti_CRUD
         {
             int i;
             bool ver;
+            bool isEmpty = true;
 
             //Faccio un ordinamento in base al prezzo
-            do
-            {
-                ver = true;
-
-                for (i = 1; i < dim; i++)
+           
+                do
                 {
-                    if (p[i - 1].Prezzo > p[i].Prezzo)
+                    ver = true;
+
+                    for (i = 1; i < dim; i++)
                     {
-                        float biggerPrice = p[i - 1].Prezzo;
-                        string biggerProductName = p[i - 1].Nome;
+                        if (p[i - 1].Prezzo > p[i].Prezzo)
+                        {
+                            float biggerPrice = p[i - 1].Prezzo;
+                            string biggerProductName = p[i - 1].Nome;
 
-                        float lowerPrice = p[i].Prezzo;
-                        string lowerProductName = p[i].Nome;
+                            float lowerPrice = p[i].Prezzo;
+                            string lowerProductName = p[i].Nome;
 
-                        p[i].Prezzo = biggerPrice;
-                        p[i].Nome = biggerProductName;
+                            p[i].Prezzo = biggerPrice;
+                            p[i].Nome = biggerProductName;
 
-                        p[i - 1].Prezzo = lowerPrice;
-                        p[i - 1].Nome = lowerProductName;
+                            p[i - 1].Prezzo = lowerPrice;
+                            p[i - 1].Nome = lowerProductName;
 
-                        ver = false;
+                            ver = false;
+                        }
                     }
+                } while (ver == false);
 
-                }
+                //Prendo il primo valore
+                i = 0;
 
-            } while (ver == false);
+                //Visualizzo il nome e il prezzo
+                MessageBox.Show($"Il prodotto col prezzo più basso è {p[i].Nome} che costa {p[i].Prezzo}€.");
+            
 
-            //Prendo il primo valore
-            i = 0;
-
-            //Visualizzo il nome e il prezzo
-            MessageBox.Show($"Il prodotto col prezzo più basso è {p[i].Nome} che costa {p[i].Prezzo}€.");
         }
         public void FindMax() //Funzione "Trovare massimo"
         {
             int i;
             bool ver;
 
+            //if ()
             //Faccio un ordinamento in base al prezzo
             do
             {
@@ -346,6 +374,7 @@ namespace Gestione_prodotti_CRUD
 
         private void btn_ReadFromFile_Click(object sender, EventArgs e)
         {
+            R();
             ReadFromFile();
             lbl_UpdateProduct.Show();
             txtb_UpdateProduct.Show();
