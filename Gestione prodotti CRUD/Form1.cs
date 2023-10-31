@@ -42,7 +42,7 @@ namespace Gestione_prodotti_CRUD
             {
                 if (System.Text.RegularExpressions.Regex.IsMatch(txtb_ProductPrice.Text, "[^0-9]"))
                 {
-                    MessageBox.Show("Inserisci un numero nella casella del prezzo.");
+                    MessageBox.Show("Inserisci un valore numererico nella casella del prezzo.");
                 }
                 else
                 {
@@ -110,8 +110,9 @@ namespace Gestione_prodotti_CRUD
             bool ver;
             bool isEmpty = true;
 
-            //Faccio un ordinamento in base al prezzo
-           
+            if (lb_ProductsList.Items.Count != 0)
+            {
+                //Faccio un ordinamento in base al prezzo
                 do
                 {
                     ver = true;
@@ -142,108 +143,180 @@ namespace Gestione_prodotti_CRUD
 
                 //Visualizzo il nome e il prezzo
                 MessageBox.Show($"Il prodotto col prezzo più basso è {p[i].Nome} che costa {p[i].Prezzo}€.");
-            
-
+            }
+            else
+            {
+                MessageBox.Show("La lista è vuota.");
+            }
         }
         public void FindMax() //Funzione "Trovare massimo"
         {
             int i;
             bool ver;
 
-            //if ()
-            //Faccio un ordinamento in base al prezzo
-            do
+            if (lb_ProductsList.Items.Count != 0)
             {
-                ver = true;
-
-                for (i = 1; i < dim; i++)
+                //Faccio un ordinamento in base al prezzo
+                do
                 {
-                    if (p[i - 1].Prezzo > p[i].Prezzo)
+                    ver = true;
+
+                    for (i = 1; i < dim; i++)
                     {
-                        float biggerPrice = p[i - 1].Prezzo;
-                        string biggerProductName = p[i - 1].Nome;
+                        if (p[i - 1].Prezzo > p[i].Prezzo)
+                        {
+                            float biggerPrice = p[i - 1].Prezzo;
+                            string biggerProductName = p[i - 1].Nome;
 
-                        float lowerPrice = p[i].Prezzo;
-                        string lowerProductName = p[i].Nome;
+                            float lowerPrice = p[i].Prezzo;
+                            string lowerProductName = p[i].Nome;
 
-                        p[i].Prezzo = biggerPrice;
-                        p[i].Nome = biggerProductName;
+                            p[i].Prezzo = biggerPrice;
+                            p[i].Nome = biggerProductName;
 
-                        p[i - 1].Prezzo = lowerPrice;
-                        p[i - 1].Nome = lowerProductName;
+                            p[i - 1].Prezzo = lowerPrice;
+                            p[i - 1].Nome = lowerProductName;
 
-                        ver = false;
+                            ver = false;
+                        }
+
                     }
 
-                }
+                } while (ver == false);
 
-            } while (ver == false);
+                //Prendo l'ultimo valore
+                i = dim - 1;
 
-            //Prendo l'ultimo valore
-            i = dim - 1;
-
-            //Visualizzo il nome e il prezzo
-            MessageBox.Show($"Il prodotto col prezzo più alto è {p[i].Nome} che costa {p[i].Prezzo}€.");
+                //Visualizzo il nome e il prezzo
+                MessageBox.Show($"Il prodotto col prezzo più alto è {p[i].Nome} che costa {p[i].Prezzo}€.");
+            }
+            else
+            {
+                MessageBox.Show("La lista è vuota.");
+            }
         }
         public void OrdinamentoAlfabetico() //Funzione "Ordinare"
         {
             int scambi = 0;
 
-            do
+            if (lb_ProductsList.Items.Count != 0)
             {
-                scambi = 0;
-
-                for (int i = 0; i < dim - 1; i++)
+                do
                 {
-                    if (string.Compare(p[i + 1].Nome, p[i].Nome) < 0) //Compare prende le prime due lettere, se la prima da minore di 0, allora scambio
+                    scambi = 0;
+
+                    for (int i = 0; i < dim - 1; i++)
                     {
-                        string firstLetter = p[i + 1].Nome;
-                        string secondLetter = p[i].Nome;
+                        if (string.Compare(p[i + 1].Nome, p[i].Nome) < 0) //Compare prende le prime due lettere, se la prima da minore di 0, allora scambio
+                        {
+                            string firstLetter = p[i + 1].Nome;
+                            string secondLetter = p[i].Nome;
 
-                        p[i].Nome = firstLetter;
-                        p[i + 1].Nome = secondLetter;
-                        scambi++;
+                            p[i].Nome = firstLetter;
+                            p[i + 1].Nome = secondLetter;
+                            scambi++;
+                        }
                     }
-                }
-            } while (scambi != 0);
+                } while (scambi != 0);
 
-            for (int i = 0; i < dim; i++)
+                for (int i = 0; i < dim; i++)
+                {
+                    lb_ProductsList.Items.Add($"Il prodotto {p[i].Nome} costa {p[i].Prezzo}€.");
+                }
+            }
+            else
             {
-                lb_ProductsList.Items.Add($"Il prodotto {p[i].Nome} costa {p[i].Prezzo}€.");
+                MessageBox.Show("La lista è vuota.");
             }
         }
         public void SommaPrezzi() //Funzione "Somma"
         {
             float somma = 0;
 
-            for (int i = 0; i < dim; i++)
+            if (lb_ProductsList.Items.Count != 0)
             {
-                somma += p[i].Prezzo;
-            }
+                for (int i = 0; i < dim; i++)
+                {
+                    somma += p[i].Prezzo;
+                }
 
-            MessageBox.Show($"La somma dei prezzi è {somma}.");
+                MessageBox.Show($"La somma dei prezzi è {somma}.");
+            }
+            else
+            {
+                MessageBox.Show("La lista è vuota.");
+            }
         }
         public void PercentSum() //Funzione "Sommare percentuale"
         {
-            float discount = float.Parse(txtb_Percentuale.Text); //"Sconto" da applicare
-            float finalPrice = 0;
-
-            for (int i = 0; i < dim; i++)
+            if (lb_ProductsList.Items.Count != 0)
             {
-                finalPrice = (p[i].Prezzo * discount) / 100;
-                p[i].Prezzo += finalPrice; //Sommo
-            }
+                bool insert = true;
 
+                if (txtb_Percentuale.Text == "")
+                {
+                    MessageBox.Show("Inserire una percentuale.");
+                    insert = false;
+                }
+
+                if (insert == true)
+                {
+                    if (System.Text.RegularExpressions.Regex.IsMatch(txtb_Percentuale.Text, "[^0-9]"))
+                    {
+                        MessageBox.Show("Inserisci un valore numerico.");
+                    }
+                    else
+                    {
+                        float discount = float.Parse(txtb_Percentuale.Text); //"Sconto" da applicare
+                        float finalPrice = 0;
+                        
+                        for (int i = 0; i < dim; i++)
+                        {
+                            finalPrice = (p[i].Prezzo * discount) / 100;
+                            p[i].Prezzo += finalPrice; //Sommo
+                        }
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("La lista è vuota.");
+            }
         }
         public void PercentSub() //Funzione "Sottrarre percentuale"
         {
-            float discount = float.Parse(txtb_Percentuale.Text); //"Sconto" da applicare
-            float finalPrice = 0;
-
-            for (int i = 0; i < dim; i++)
+            if (lb_ProductsList.Items.Count != 0)
             {
-                finalPrice = (p[i].Prezzo * discount) / 100;
-                p[i].Prezzo -= finalPrice; //Sottraggo
+                bool insert = true;
+
+                if (txtb_Percentuale.Text == "")
+                {
+                    MessageBox.Show("Inserire una percentuale.");
+                    insert = false;
+                }
+
+                if (insert == true)
+                {
+                    if (System.Text.RegularExpressions.Regex.IsMatch(txtb_Percentuale.Text, "[^0-9]"))
+                    {
+                        MessageBox.Show("Inserisci un valore numerico.");
+                    }
+                    else
+                    {
+                        float discount = float.Parse(txtb_Percentuale.Text); //"Sconto" da applicare
+                        float finalPrice = 0;
+
+                        for (int i = 0; i < dim; i++)
+                        {
+                            finalPrice = (p[i].Prezzo * discount) / 100;
+                            p[i].Prezzo -= finalPrice; //Sottraggo
+                        }
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("La lista è vuota.");
             }
         }
         public void ReadFromFile() //Funzione "Leggere da file"
